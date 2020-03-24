@@ -1,6 +1,6 @@
 .nav-sup {
-    height: 120px;
-    background-image: linear-gradient(to right, rgb(187, 30, 30), rgb(128, 20, 20) 100%);
+    height: 130px;
+    background-image: linear-gradient(to right, rgb(187, 30, 30), rgb(146, 37, 37) 100%);
 }
 
 .yugioh-logo {
@@ -16,6 +16,51 @@
 }
 
 .sub-header {
-    background-image: linear-gradient(to right, rgb(199, 199, 199), rgb(212, 212, 212) 100%);
-    border-radius: 0px 0px 20px 20px;
+    background-image: linear-gradient(to right, rgb(253, 253, 253), rgb(236, 236, 236) 100%);
+    border-radius: 0px 0px 10px 10px;
+    padding-bottom: 10px;
+}
+
+.card-change-loading {
+    animation: spin-out infinite 0.5s linear;
+}
+
+.card-change-success {
+    animation: spin-in 1s linear;
+}
+
+
+@keyframes spin-out {
+    0% {
+        transform: rotate3d(0, 1, 0, 360deg);
+    }
+    100% {
+        transform: rotate3d(0, 0, 0, 0deg);
+    }
+}
+
+@keyframes spin-in {
+    0% {
+        transform: rotate3d(0, 1, 0, 90deg);
+    }
+    100% {
+        transform: rotate3d(0, 0, 0, 180deg);
+    }
+}
+
+@keyframes showDown {
+    0% {
+        height: 0%;
+    }
+    100% {
+        height: 100%;
+    }
+}
+
+.slideInDown {
+    animation: showDown 2s 2s linear;
+}
+
+.slideOutUp {
+    animation: showDown 2s 2s reverse;
 }

@@ -4,5 +4,17 @@
     overflow-x: hidden;
 }
 body {
-    background-image: linear-gradient(to right, rgb(27, 27, 27), rgb(65, 65, 65) 100%);
+    background-color: rgb(214, 214, 214);
+}
+a:hover {
+    cursor: pointer;
+}
+
+.card-title {
+    overflow-y: hidden;
+}
+
+.card-body {
+    height: 230px;
+    overflow-y: auto;
 }

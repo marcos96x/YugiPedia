@@ -1,24 +1,277 @@
-<div class="nav-sup row">
-    <div class="col-sm-4">
-        <img src="./../../../assets/seto-kayba.png" alt="" class="yugioh-seto-kayba mx-auto d-block">
-    </div>
-    <div class="col-sm-4">
-        <img src="./../../../assets/yugioh-logo.PNG" alt="" class="yugioh-logo mx-auto d-block">
-    </div>
-    <div class="col-sm-4">
-        <img src="./../../../assets/yugi-moto-png.png" alt="" class="yugioh-yugi mx-auto d-block">
-    </div>
+<div class="nav-sup shadow p-1 mb-1 bg-white" id="startMenu">
+    <div class="row">
+        <div class="col-sm-12">
+            <img src="./../../../assets/yugioh-logo.PNG" alt="" class="yugioh-logo mx-auto d-block">
+        </div>
+    </div>    
 </div>
 
 <div class="container sub-header">
     <div class="row">
-        <div class="col-sm-6 text-center">
+        <div class="col-sm-12 text-center">
+            <ul class="nav nav-tabs justify-content-center">
+                <li class="nav-item">
+                    <a class="nav-link" [ngClass]="{active: tipoBusca == 1}" (click)="setTipoBusca(1)">Search by name</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" [ngClass]="{active: tipoBusca == 2}" (click)="setTipoBusca(2)">Advanced Search</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <br>
+    <div class="row" *ngIf="tipoBusca == 1">
+        <div class="col-sm-6 text-center justify-content-center">
             <div class="form-group">
-                <label for="searchField">Pesquise por uma carta</label>
-                <input type="email" class="form-control" id="searchField" aria-describedby="searchHelp"
-                    placeholder="Nome da carta">
-                <small id="searchHelp" class="form-text text-muted">Ex: Dragão Branco de Olhos Azuis</small>
+                <div class="row">
+                    <div class="col-sm-12 red-text" style="color: rgb(255, 56, 56)" *ngIf="errorMessage">
+                        {{ errorMessage }}
+                    </div>
+                    <div class="col-md-9 col-sm-12">
+                        <input type="search" class="form-control" #searchField id="searchField"
+                            aria-describedby="searchHelp" placeholder="Card name"
+                            (keyup)="searchKeyUp($event.keyCode, searchField.value)">
+                        <small id="searchHelp" class="form-text text-muted">Ex: Dark Magician</small>
+                    </div>
+                    <div class="col-md-3 col-sm-12">
+                        <button class="btn btn-outline-primary btn-sm"
+                            (click)="search(searchField.value)">Search</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6 text-center">
+            <div class="card mb-3" style="max-width: 540px;">
+                <div class="row">
+                    <div class="col-md-4">
+                        <img [src]="card.card_images[0].image_url" class="card-img img-fluid" [ngClass]="classImageCard"
+                            alt="...">
+                    </div>
+                    <div class="col-md-8">
+                        <div class="card-body">
+                            <h3 class="card-title">{{ card.name }}</h3>
+                            <p class="card-text" *ngIf="card.atk">
+                                <strong>Type</strong>: {{ card.type }} <br>
+                                <strong>Description</strong>: {{ card.desc }} <br>
+                                <strong>Atk</strong>: {{ card.atk }} <br>
+                                <strong>Def</strong>: {{ card.def }} <br>
+                                <a (click)="openCard(uniqueCard)">See more</a>
+                            </p>
+                            <p class="card-text" *ngIf="!card.atk">
+                                <strong>Type</strong>: {{ card.type }} <br>
+                                <strong>Description</strong>: {{ card.desc }} <br>
+                                <a (click)="openCard(uniqueCard)">See more</a>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row" *ngIf="tipoBusca == 2">
+        <div class="col-sm-12 red-text" style="color: rgb(255, 56, 56)" *ngIf="errorMessage2">
+            {{ errorMessage2 }}
+        </div>
+        <div class="col-sm-6">
+            <div class="row">
+                <div class="col-sm-12">
+                    <label for="">Incomplete Name</label>
+                    <input type="text" #name class="form-control">
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-6">
+                    <label for="">{{ rangeStars }} Stars</label>
+                    <input type="range" (change)="setRangeStars($event.target.value)" class="custom-range" value="0"
+                        min="0" max="12">
+                </div>
+                <div class="col-sm-6">
+                    <label for="">Attribute</label>
+                    <select name="" id="" #attribute class="form-control">
+                        <option value="All">All</option>
+                        <option value="Dark">Dark</option>
+                        <option value="Divine">Divine</option>
+                        <option value="Earth">Earth</option>
+                        <option value="Fire">Fire</option>
+                        <option value="Light">Light</option>
+                        <option value="Water">Water</option>
+                        <option value="Wind">Wind</option>
+                        <option value="Laugh">Laugh</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <div class="row">
+                <div class="col-sm-12">
+                    <label for="">Archertype</label>
+                    <input type="text" #arch class="form-control">
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-6">
+                    <label for="">Race</label>
+                    <select name="" #race id="" class="form-control">
+                        <option value="All">All</option>
+                        <option value="Equip">Equip</option>
+                        <option value="Counter">Counter</option>
+                        <option value="Aqua">Aqua</option>
+                        <option value="Beast">Beast</option>
+                        <option value="Beast-Warrior">Beast-Warrior</option>
+                        <option value="Dinosaur">Dinosaur</option>
+                        <option value="Divine-Beast">Divine-Beast</option>
+                        <option value="Dragon">Dragon</option>
+                        <option value="Fairy">Fairy</option>
+                        <option value="Fiend">Fiend</option>
+                        <option value="Fish">Fish</option>
+                        <option value="Insect">Insect</option>
+                        <option value="Machine">Machine</option>
+                        <option value="Plant">Plant</option>
+                        <option value="Psychic">Psychic</option>
+                        <option value="Pyro">Pyro</option>
+                        <option value="Reptile">Reptile</option>
+                        <option value="Rock">Rock</option>
+                        <option value="Sea Serpent">Sea Serpent</option>
+                        <option value="Spellcaster">Spellcaster</option>
+                        <option value="Warrior">Warrior</option>
+                        <option value="Winged Beast">Winged Beast</option>
+                        <option value="Wyrm">Wyrm</option>
+                        <option value="Zombie">Zombie</option>
+                    </select>
+                </div>
+                <div class="col-sm-6 align-self-end">
+                    <label for="">Order by</label>
+                    <select name="" #order id="" class="form-control">
+                        <option value="None">None</option>
+                        <option value="Atk">Atk</option>
+                        <option value="Def">Def</option>
+                        <option value="Name">Name</option>
+                        <option value="Type">Type</option>
+                        <option value="level">Stars (level)</option>
+                        <option value="Id">Id</option>
+                        <option value="New">New</option>
+                    </select>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="col-sm-12">
+            <hr>
+            <button class="btn btn-outline-primary"
+                (click)="searchAllCards(name.value, attribute.value, arch.value, race.value, order.value)">Search</button>
+            <br><br>
+        </div>
+        <div class="col-sm-12 text-center">
+            <button type="button" class="btn btn-dark btn-sm btn-block" (click)="showAllCards()">{{ iconShowCards }}</button>
+
+        </div>
+        <div class="col-sm-12" *ngIf="loading">
+            <br><br>
+            <div class="text-center" style="overflow-y: hidden;">
+                <div class="spinner-border" role="status">
+                    <span class="sr-only">Loading...</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="container" *ngIf="tipoBusca == 2">
+            <div class="row" *ngIf="!loading" [hidden]="!showCards">
+                <div class="col-sm-4 col-md-3  text-center" style="margin-top: 20px; cursor: pointer;"
+                    *ngFor="let cardRes of cardsShow">
+                    <img class="images-cards" [src]="cardRes.card_images[0].image_url_small" alt="" (click)="setCardModal(cardRes, allCards)">
+                    
+                </div>
+                <div class="col-sm-12">
+                    <div class="row" style="margin-top: 10px;">
+                        <div class="col-sm-6 text-left" *ngIf="showButtonMoreCards" >
+                            <button class="btn btn-dark" (click)="showMoreCards()">See more cards</button>
+                        </div>
+                        <div class="col-sm-6 text-right" *ngIf="cardsShow.length > 0" >
+                            <a class="btn btn-dark" style="color: aliceblue;" href="#startMenu">Back to start</a>
+                        </div>
+                    </div> 
+                </div>
+                               
             </div>
         </div>
     </div>
 </div>
+
+
+<ng-template #uniqueCard let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title">{{ card.name }}</h4>
+    </div>
+    <div class="modal-body">
+        <div class="row">
+            <div class="col-sm-6">
+                <img class="img-fluid" [src]="card.card_images[0].image_url" alt="">
+             </div>
+             <div class="col-sm-6">
+                 <p *ngIf="!card.atk" >
+                     <strong>Id: </strong> {{ card.id }} <br>
+                     <strong>Type: </strong> {{ card.type }} <br>
+                     <strong>Description: </strong> {{ card.desc }} <br>
+                     <strong>Race: </strong> {{ card.race }} <br>
+                     <strong>Archetype: </strong> {{ card.archetype }} <br>
+                 </p>
+                 <p *ngIf="card.atk" >
+                    <strong>Id: </strong> {{ card.id }} <br>
+                    <strong>Type: </strong> {{ card.type }} <br>
+                    <strong>Atk: </strong> {{ card.atk }} <br>
+                    <strong>Def: </strong> {{ card.def }} <br>
+                    <strong>Description: </strong> {{ card.desc }} <br>
+                    <strong>Race: </strong> {{ card.race }} <br>
+                    <strong>Attribute: </strong> {{ card.attribute }} <br>
+                    <strong>Archetype: </strong> {{ card.archetype }} <br>
+                    <strong>Level: </strong> {{ card.level }} <br>
+                </p>
+             </div>
+        </div>
+        
+        
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-light" (click)="modal.close()">Close</button>
+    </div>
+</ng-template>
+
+<ng-template #allCards let-modal style="background-color: transparent;">
+    <div class="modal-header">
+        <h4 class="modal-title">{{ uniqueCardModal.name }}</h4>
+    </div>
+    <div class="modal-body">
+        <div class="row">
+            <div class="col-sm-6">
+                <img class="img-fluid" [src]="uniqueCardModal.card_images[0].image_url" alt="">
+             </div>
+             <div class="col-sm-6">
+                 <p *ngIf="!uniqueCardModal.atk" >
+                     <strong>Id: </strong> {{ uniqueCardModal.id }} <br>
+                     <strong>Type: </strong> {{ uniqueCardModal.type }} <br>
+                     <strong>Description: </strong> {{ uniqueCardModal.desc }} <br>
+                     <strong>Race: </strong> {{ uniqueCardModal.race }} <br>
+                     <strong>Archetype: </strong> {{ uniqueCardModal.archetype }} <br>
+                 </p>
+                 <p *ngIf="uniqueCardModal.atk" >
+                    <strong>Id: </strong> {{ uniqueCardModal.id }} <br>
+                    <strong>Type: </strong> {{ uniqueCardModal.type }} <br>
+                    <strong>Atk: </strong> {{ uniqueCardModal.atk }} <br>
+                    <strong>Def: </strong> {{ uniqueCardModal.def }} <br>
+                    <strong>Description: </strong> {{ uniqueCardModal.desc }} <br>
+                    <strong>Race: </strong> {{ uniqueCardModal.race }} <br>
+                    <strong>Attribute: </strong> {{ uniqueCardModal.attribute }} <br>
+                    <strong>Archetype: </strong> {{ uniqueCardModal.archetype }} <br>
+                    <strong>Level: </strong> {{ uniqueCardModal.level }} <br>
+                </p>
+             </div>
+        </div>
+        
+        
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-light" (click)="modal.close()">Close</button>
+    </div>
+</ng-template>
